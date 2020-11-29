@@ -188,9 +188,11 @@ error_directory /etc/squid3/error
 
 12. Membuat domain `janganlupa-ta.b08.pw` pada uml malang yang diarahkan pada ip-mojokerto sebagai proxy server
 Pada uml malang file `etc/bind/named.conf.local` menambahkan
+
 ![image](https://user-images.githubusercontent.com/55347970/100544774-a92b6080-328a-11eb-90b2-8e71d6fb5c38.png)
 
 Pada uml malang file `/etc/bind/jarkom/janganlupa-ta.b08.pw` menambahkan
+
 ![image](https://user-images.githubusercontent.com/55347970/100544733-4a65e700-328a-11eb-9afc-24ec5860563c.png)
 
 ### Konfigurasi file `/etc/squid3/squid.conf`

@@ -125,4 +125,79 @@ Sidoarjo :
 
 ![alt text](https://lh5.googleusercontent.com/pONqJCkcneucSSs-90l8ZgoLUxjXhy6eqZUJWhw5E3hnLOQ6ExkQuQRJZTQmyai1Ug2zp2YQaj7IDivtSFWIdxxo8ulTKRK7DMyezN8ngPGM_zqmntyRmSFaqtud4Ohq3n_PkuqM)
 
+7. User Authentication 
+Jalankan command
+```
+htpasswd -c /etc/squid3/passwd userta_b08
+```
+kemudian masukkan password `inipassw0rdta_b08`. Pada uml mojokerto file /etc/squid3/squid.conf menambahkan
+```
 
+auth_param basic program /usr/lib/squid3/ncsa_auth /etc/squid3/passwd
+auth_param basic children 5
+auth_param basic realm Proxy
+auth_param basic credentialsttl 2 hours
+auth_param basic casesensitive on
+acl USERS proxy_auth REQUIRED
+
+http_access allow USERS
+```
+
+8. Pembatasan akses internet hanya pada jadwal Selasa-Rabu pukul 13.00-18.00
+Pada uml mojokerto file `/etc/squid3/acl.conf` menambahkan 
+```
+acl AVAILABLE_WORKING time TW 13:00-18:00
+```
+Pada uml mojokerto file `/etc/squid3/squid.conf` menambahkan
+```
+include /etc/squid3/acl.conf
+
+http_access allow AVAILABLE_WORKING
+http_access deny all
+```
+
+9. Pembatasan akses internet hanya pada jadwal Selasa-Kamis pukul 21.00-09.00 keesokan harinya
+Pada uml mojokerto file `/etc/squid3/acl.conf` menambahkan
+```
+acl AVAILABLE_WORKING time TWH 21:00-24:00
+acl AVAILABLE_WORKING time WHF 00:00-09:00
+```
+Tidak perlu menambahkan sript pada Pada uml mojokerto file `/etc/squid3/squid.conf` karena sudah ditambahkan pada soal sebelumnya
+
+10. Redirect google.com menuju monta.if.its.ac.id
+Pada uml mojokerto file `/etc/squid3/domains.acl` menambahkan
+```
+google.com
+www.google.com
+```
+Pada uml mojokerto file `/etc/squid3/acl.conf` menambahkan
+```
+acl RESTRICTED dstdomain "etc/squid3/domains.acl"
+```
+Pada uml mojokerto file `/etc/squid3/squid.conf` menambahkan
+```
+http_access deny RESTRICTED
+deny_info http://monta.if.its.ac.id RESTRICTED
+```
+
+11. Mengubah error page default squid dengan file dari `10.151.36.202/ERR_ACCESS_DENIED`
+Pada uml mojokerto file `/etc/squid3/squid.conf` menambahkan 
+```
+error_directory /etc/squid3/error
+```
+
+12. Membuat domain `janganlupa-ta.b08.pw` pada uml malang yang diarahkan pada ip-mojokerto sebagai proxy server
+Pada uml malang file `etc/bind/named.conf.local` menambahkan
+![image](https://user-images.githubusercontent.com/55347970/100544774-a92b6080-328a-11eb-90b2-8e71d6fb5c38.png)
+
+Pada uml malang file `/etc/bind/jarkom/janganlupa-ta.b08.pw` menambahkan
+![image](https://user-images.githubusercontent.com/55347970/100544733-4a65e700-328a-11eb-9afc-24ec5860563c.png)
+
+### Konfigurasi file `/etc/squid3/squid.conf`
+![image](https://user-images.githubusercontent.com/55347970/100544170-78e1c300-3286-11eb-8aeb-e87d11981b53.png)
+
+### Konfigurasi file `/etc/squid3/acl.conf`
+![image](https://user-images.githubusercontent.com/55347970/100544191-9f9ff980-3286-11eb-95c6-a8f81f4911b3.png)
+
+### Konfigurasi file `/etc/squid3/domains.acl`
+![image](https://user-images.githubusercontent.com/55347970/100544272-176e2400-3287-11eb-9bfd-25e3ccd3cb70.png)
